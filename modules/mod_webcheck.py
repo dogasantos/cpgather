@@ -201,8 +201,10 @@ def getFaviconUri(favpath,originurl):
         else:
             icon_url = proto+"://"+host+":"+port+"/"+icon
         icon_data = generic_getUrl(icon_url,3)
-        if icon_data.status_code = '200':
-
+        if icon_data.status_code == '200':
+            pass
+            # todo
+    return false # todo
 
 
 def getUrl(url,timeout):
