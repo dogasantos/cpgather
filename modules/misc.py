@@ -3,6 +3,7 @@
 import ipaddress
 import pickle
 import os
+import json
 from tldextract import extract
 from fqdn import FQDN
 try:
@@ -58,6 +59,11 @@ def readFile(filename):
         return False
     with open(filename, "r") as f:
         content = f.readlines()
+    return content
+
+def readJson(filename):
+    with open(filename,"r") as f:
+        content = json.load(f)['data']
     return content
 
 def parseUrlProtoHostPort(urlstr):

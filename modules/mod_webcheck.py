@@ -13,7 +13,7 @@ import json, os
 from bs4 import BeautifulSoup
 from base64 import b64encode
 import zlib
-
+import mmh3
 
 try:
     from urllib import unquote
@@ -60,7 +60,9 @@ def FindWeb(domain, nmapObj):
     return weblist
 
 
-'''
+
+def wappFormat(wappObj):
+    '''
     list(
         url: string
         headers: string
@@ -69,8 +71,7 @@ def FindWeb(domain, nmapObj):
         applications: dict
     )
 
-'''
-def wappFormat(wappObj):
+    '''
     final_content = list()
     for each in wappObj:
         js = list()
@@ -162,6 +163,7 @@ def wappFormat(wappObj):
                     new_data['applications'] = list(dict())
 
                 new_data['content'] = each['content']
+
                 final_content.append(dict(new_data))
 
     return final_content
@@ -180,17 +182,54 @@ def normalize_jsfiles(origin_url,js_list):
                 lista.append(str(origin_url)+"/"+str(item))
     return lista
 
+def generic_getUrl(url,timeout):
+    url=url.rstrip()
+    requests.packages.urllib3.disable_warnings(category=InsecureRequestWarning)
+    disable_warnings(InsecureRequestWarning)
+    requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS = 'ALL'
+    r = requests.get(url, timeout=timeout, verify=False)
+    return r
+
+
+def getFaviconUri(favpath,originurl):
+    for icon in favpath:
+        proto,host,port = parseUrlProtoHostPort(icon)
+        if "http://" in icon or "https://" in icon:
+            icon_url = icon
+        elif len(host) == 0:
+            icon_url = originurl +"/"+icon
+        else:
+            icon_url = proto+"://"+host+":"+port+"/"+icon
+        icon_data = generic_getUrl(icon_url,3)
+        if icon_data.status_code = '200':
+
+
 
 def getUrl(url,timeout):
+    requests.packages.urllib3.disable_warnings(category=InsecureRequestWarning)
+    disable_warnings()
+    requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS = 'ALL'
     ret=dict()
     ahr=list()
     jsf=list()
+    icons=list()
     url=url.rstrip()
     r = requests.get(url, timeout=timeout, verify=False)
     soup = BeautifulSoup(r.content, features="lxml")
 
+
     ret['url'] = url
     ret['status'] = r.status_code
+
+    for link in soup.find_all('link'):
+        linkrel = link.get('rel')
+        if 'icon' in linkrel:
+            ret['favicon_url'] = link.attrs['href']
+        else:
+            ret['favicon_url'] = ""
+
+    
+
     scripts = soup.find_all("script")
     for tag in scripts:
         try:
@@ -199,6 +238,17 @@ def getUrl(url,timeout):
             pass
         else:
             ret['js'] = jsf
+
+    '''
+    linkjs = soup.find_all("link")
+    for tag in linkjs:
+        try:
+            jsf.append(tag['href'])
+        except:
+            pass
+        else:
+            ret['js'] = jsf
+    '''
 
     links = soup.find_all("a")
     for tag in links:
@@ -212,8 +262,6 @@ def getUrl(url,timeout):
     ret['headers'] = r.headers
     ret['stack'] = execWappalyzer(url)
     ret['content'] = b64encode(zlib.compress(r.content))
-
-
     return ret
 
 def GetJsCommonDirectoriesURI(domain,list_of_js_files):
@@ -238,7 +286,7 @@ def RetrieveWebContent(urls):
     requests.packages.urllib3.disable_warnings(category=InsecureRequestWarning)
     disable_warnings()
     requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS = 'ALL'
-    with concurrent.futures.ThreadPoolExecutor(max_workers=8) as executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
         future_to_url = { executor.submit(getUrl, url, 60): url for url in urls }
         for future in concurrent.futures.as_completed(future_to_url):
             url = future_to_url[future]
