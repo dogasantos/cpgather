@@ -40,7 +40,9 @@ def parseMassdns(domain):
 def parseMassdnsStruct(domain):
     m_file = readFile(domain+".massdns")
     aux=list()
+    print len(m_file)
     for massdns_item in m_file:
+        print len(massdns_item)
         hosts=dict()
         line = massdns_item.replace('. ', ',').replace(' ', ',')
         if line.split(',')[1] == "CNAME":
