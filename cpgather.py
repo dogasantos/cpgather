@@ -18,7 +18,7 @@ from modules.mod_massdns import execMassdns, parseMassdns
 from modules.mod_masscan import execMasscan
 from modules.masstomap import execMton
 from modules.mod_nmap import nmap_LoadXmlObject
-from modules.misc import saveFile, readFile, appendFile
+from modules.misc import saveFile, readFile, appendFile, filterTargetDomainList
 from modules.mod_s3scanner import execS3Scanner
 from modules.mod_waybackmachine import WayBackMachine
 from modules.mod_crtsh import crtshQuery
@@ -104,8 +104,8 @@ def TargetDiscovery(domain,wordlist):
         fdns_host_list,fdns_cname_list = parseForwardDnsFile(domain)
         for h in fdns_host_list:
             hosts.append(h.rstrip("\n"))
-
-    uhosts = list(set(hosts))
+    #just to make sure...
+    uhosts = filterTargetDomainList(list(set(hosts)),domain)
 
     saveFile(domain + ".hosts", uhosts)
     print "  + Hosts file created: " + domain + ".hosts"

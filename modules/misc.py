@@ -168,3 +168,11 @@ def isMimetype(valor):
         except:
             pass
     return result
+
+def filterTargetDomainList(lista,domain):
+    clean = list()
+    for host in lista:
+        if "."+domain not in host:
+            continue
+        clean.append(host)
+    return clean

@@ -9,6 +9,8 @@ def fixSublist3r(domain):
         f = open(domain + ".sublist3r")
         content = f.readlines()
         for item in content:
+            if "."+domain not in item:
+                continue # sublist3r might return somethineheretargetdomain.tdl instead of somethinghere.targetdomain.tdl on some cases.
             if '<BR>' in item:
                 for token in item.split('<BR>'):
                     if len(token) > 0:
