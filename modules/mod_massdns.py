@@ -40,9 +40,7 @@ def parseMassdns(domain):
 def parseMassdnsStruct(domain):
     m_file = readFile(domain+".massdns")
     aux=list()
-    print len(m_file)
     for massdns_item in m_file:
-        print len(massdns_item)
         hosts=dict()
         line = massdns_item.replace('. ', ',').replace(' ', ',')
         if line.split(',')[1] == "CNAME":
@@ -68,12 +66,10 @@ def getIpsByvhost(url):
     return ips
 
 def getAllipsFor(url):
-    print("getAllipsFor====> {}".format(str(url)))
     ips = list()
     url = url.rstrip("/")
     url = url.replace("http://", '').replace("https://", '').split(":")[0]
     host, dom, tld = splitHostname(url)
-    print("parseMassdnsStruct========> {} {}".format(str(dom), str(tld)))
     ipdb = parseMassdnsStruct(dom + "." + tld)
 
     for line in ipdb:
