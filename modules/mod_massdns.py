@@ -73,7 +73,6 @@ def getAllipsFor(url):
     host, dom, tld = splitHostname(url)
     print("parseMassdnsStruct========> {} {}".format(str(dom), str(tld)))
     ipdb = parseMassdnsStruct(dom + "." + tld)
-    print("ipdb========> {} len({})".format(str(ipdb),str(len(ipdb))))
 
     for line in ipdb:
         if url == line['vhost']:
