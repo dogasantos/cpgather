@@ -3,7 +3,7 @@
 import os
 import subprocess
 from modules.misc import isGlobalIpv4, readFile, splitHostname
-
+from misc import checkFqdn
 
 
 def execMassdns(domain,resolvers):
@@ -66,13 +66,16 @@ def getIpsByvhost(url):
     return ips
 
 def getAllipsFor(url):
+    print("getAllipsFor====> {}".format(str(url)))
     ips = list()
     url = url.rstrip("/")
     url = url.replace("http://", '').replace("https://", '').split(":")[0]
     host, dom, tld = splitHostname(url)
+    print("parseMassdnsStruct========> {} {}".format(str(dom), str(tld)))
     ipdb = parseMassdnsStruct(dom + "." + tld)
+    print("ipdb========> {} {}".format(str(ipdb))
+
     for line in ipdb:
         if url == line['vhost']:
             ips.append(line['ipaddr'])
-
     return ips

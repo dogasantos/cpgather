@@ -190,7 +190,6 @@ def generic_getUrl(url,timeout):
     r = requests.get(url, timeout=timeout, verify=False)
     return r
 
-
 def getFaviconUri(favpath,originurl):
     for icon in favpath:
         proto,host,port = parseUrlProtoHostPort(icon)
