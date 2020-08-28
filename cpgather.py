@@ -124,7 +124,7 @@ def TargetDiscovery(domain,wordlist):
 
     return unique_ips,uhosts
 
-def WebDiscovery(nmapObj, domain):
+def WebDiscovery(nmapObj, domain, verbose):
     print "[*] Web Discovery phase has started"
     if os.path.isfile(domain+".web") == False or os.path.getsize(domain+".web") == 0:
         webhosts=FindWeb(domain, nmapObj)
@@ -152,8 +152,10 @@ def WebDiscovery(nmapObj, domain):
         list_of_webstack = readFile(domain + ".wapp")
 
 
-    print "[*] Javascript files identification"
+    print("[*] Javascript files identification")
     if os.path.isfile(domain+".js.allfiles") == False or os.path.getsize(domain+".js.allfiles") == 0:
+        if verbose > 0:
+            print("  + Compiling a list of all js references found")
         list_of_js_files_all=list()
         all_lists_of_all_js_of_all_nodes=list()
         list_of_webstack = readFile(domain+".wapp")
@@ -162,6 +164,8 @@ def WebDiscovery(nmapObj, domain):
             for jnode in jdata:
                 for js in normalize_jsfiles(jnode['url'],jnode['js']):
                     list_of_js_files_all.append(js)
+                    if verbose > 0:
+                        print("  + Found js file: {}".format(str(js)))
                     appendFile(domain + ".js.allfiles", js+"\n")
 
         #list_of_js_files_all = readFile(domain + ".js.allfiles")
@@ -170,6 +174,8 @@ def WebDiscovery(nmapObj, domain):
 
         for js_dir_uri_item in list_of_jsdirs_uri:
             js_dir_path = getUrlPath(js_dir_uri_item).replace("//","/")
+            if verbose > 0:
+                print("  + Found js common directory: {}".format(str(js_dir_path)))
             list_of_js_dir.append(js_dir_path)
 
         list_of_js_dir = list(set(list_of_js_dir))
@@ -184,10 +190,12 @@ def WebDiscovery(nmapObj, domain):
         
         for jsdiruri in list_of_jsdirs_uri:
             appendFile(domain + ".js.dirsuri", jsdiruri  +"\n")
-    
+    else:
+        print("[*] Skipping: " + domain+".js.allfiles found")
+
     ###
     ###
-    print "[*] Extracting more endpoints from js files via LinkFinder"
+    print("[*] Extracting more endpoints from js files via LinkFinder")
     if os.path.isfile(domain+".js.endpoints") == False or os.path.getsize(domain+".js.endpoints") == 0:
         all_js_files = list(set(readFile(domain+".js.allfiles")))
         all_endpoints_found_inside_js = ExtractJsLinks(domain,all_js_files)
@@ -244,7 +252,7 @@ if __name__ == "__main__":
         nmapObj = nmap_LoadXmlObject(user_domain + ".nmap.xml")
 
     if nmapObj:
-        list_of_webservers_found, list_of_webstack = WebDiscovery(nmapObj, user_domain)
+        list_of_webservers_found, list_of_webstack = WebDiscovery(nmapObj, user_domain, user_verbose)
 
 
     else:
