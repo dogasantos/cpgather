@@ -161,14 +161,15 @@ def WebDiscovery(nmapObj, domain, verbose):
         list_of_webstack = readFile(domain+".wapp")
         for rawdata in list_of_webstack:
             jdata = json.loads(rawdata)['data']
-            print(len(jdata))
             for jnode in jdata:
                 for js in normalize_jsfiles(jnode['url'],jnode['js']):
                     list_of_js_files_all.append(js)
                     if verbose > 0:
                         print("  + Found js file: {}".format(str(js)))
                     appendFile(domain + ".js.allfiles", js+"\n")
-
+        if verbose>0:
+            if len(list_of_js_files_all)==0:
+                print("  + Could not find any js files on target hosts")
         #list_of_js_files_all = readFile(domain + ".js.allfiles")
         list_of_jsdirs_uri = GetJsCommonDirectoriesURI(domain,list_of_js_files_all)
         list_of_js_dir = list()
@@ -191,20 +192,20 @@ def WebDiscovery(nmapObj, domain, verbose):
         
         for jsdiruri in list_of_jsdirs_uri:
             appendFile(domain + ".js.dirsuri", jsdiruri  +"\n")
+
+        ###
+        ###
+        print("[*] Extracting more endpoints from js files via LinkFinder")
+        if os.path.isfile(domain+".js.endpoints") == False or os.path.getsize(domain+".js.endpoints") == 0:
+            all_js_files = list(set(readFile(domain+".js.allfiles")))
+            all_endpoints_found_inside_js = ExtractJsLinks(domain,all_js_files)
+            jsondata = json.dumps(all_endpoints_found_inside_js)
+            print("[*] Generating endpoints json file: {}".format(str(domain+".js.endpoints")))
+            appendFile(domain+".js.endpoints",jsondata)
+        else:
+            print("[*] Skipping: " + domain+".js.endpoints found")
     else:
         print("[*] Skipping: " + domain+".js.allfiles found")
-
-    ###
-    ###
-    print("[*] Extracting more endpoints from js files via LinkFinder")
-    if os.path.isfile(domain+".js.endpoints") == False or os.path.getsize(domain+".js.endpoints") == 0:
-        all_js_files = list(set(readFile(domain+".js.allfiles")))
-        all_endpoints_found_inside_js = ExtractJsLinks(domain,all_js_files)
-        jsondata = json.dumps(all_endpoints_found_inside_js)
-        print("[*] Generating endpoints json file: {}".format(str(domain+".js.endpoints")))
-        appendFile(domain+".js.endpoints",jsondata)
-    else:
-        print("[*] Skipping: " + domain+".js.endpoints found")
 
     return webhosts,list_of_webstack
 
