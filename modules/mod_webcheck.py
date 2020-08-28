@@ -135,7 +135,7 @@ def wappFormat(wappObj):
                 print("ip antes: {}".format(str(k)))
 
                 iplist=getAllipsFor(k)
-                print("lista depois: {}".format(str(iplist))
+                print("lista depois: {}".format(str(iplist)))
                 new_data['ips'] = iplist #k
                 new_data['headers'] = dict(each['headers'])
 
