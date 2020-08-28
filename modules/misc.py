@@ -55,6 +55,7 @@ def appendFile(filename,content):
         h.write(content)
 
 def readFile(filename):
+    content = False
     if os.path.isfile(filename) == False:
         return False
     with open(filename, "r") as f:

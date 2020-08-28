@@ -69,7 +69,10 @@ def getAllipsFor(url):
     ips = list()
     url = url.rstrip("/")
     url = url.replace("http://", '').replace("https://", '').split(":")[0]
+
     host, dom, tld = splitHostname(url)
+    print("url: "+url)
+    print("host, dom, tld: {}  {}  {}".format(str(host),str(dom),str(tld)) )
     ipdb = parseMassdnsStruct(dom + "." + tld)
 
     for line in ipdb:
