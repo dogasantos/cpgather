@@ -159,6 +159,7 @@ def WebDiscovery(nmapObj, domain, verbose):
         list_of_js_files_all=list()
         all_lists_of_all_js_of_all_nodes=list()
         list_of_webstack = readFile(domain+".wapp")
+        print(len(list_of_webstack))
         for rawdata in list_of_webstack:
             jdata = json.loads(rawdata)['data']
             for jnode in jdata:
