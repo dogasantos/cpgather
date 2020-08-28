@@ -65,16 +65,11 @@ def getIpsByvhost(url):
             ips.append(line['ipaddr'])
     return ips
 
-def getAllipsFor(url):
+def getAllipsFor(domain,url):
     ips = list()
     url = url.rstrip("/")
     url = url.replace("http://", '').replace("https://", '').split(":")[0]
-
-    host, dom, tld = splitHostname(url)
-    print("url: "+url)
-    print("host, dom, tld: {}  {}  {}".format(str(host),str(dom),str(tld)) )
-    ipdb = parseMassdnsStruct(dom + "." + tld)
-
+    ipdb = parseMassdnsStruct(domain)
     for line in ipdb:
         if url == line['vhost']:
             ips.append(line['ipaddr'])
