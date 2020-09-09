@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 import os
 import subprocess
-from modules.misc import isGlobalIpv4, readFile, splitHostname
-from misc import checkFqdn
+from modules.misc import isGlobalIpv4, readFile, splitHostname, checkFqdn
 
 
 def execMassdns(domain,resolvers):
