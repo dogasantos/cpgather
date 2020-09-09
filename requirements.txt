@@ -11,3 +11,4 @@ ipaddress
 dnspython
 bs4
 futures
+mmh3
