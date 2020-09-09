@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import os
 import requests
-from misc import parseUrlProtoHostPort, readFile, saveFile
+from modules.misc import parseUrlProtoHostPort, readFile, saveFile
 
 def WayBackMachine(domain):
     if os.path.isfile(domain + ".sub.wayback") == False or os.path.getsize(domain + ".sub.wayback") == 0:

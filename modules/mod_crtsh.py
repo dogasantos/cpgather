@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from misc import readFile, saveFile, checkFqdn
+from modules.misc import readFile, saveFile, checkFqdn
 from crtsh import crtshAPI
 import os
 import json
@@ -15,11 +15,6 @@ def crtshQuery(domain):
             rawlist = list()
 
         for item in rawlist:
-            print("="*10)
-            print(item)
-            print(len(item))
-            print(type(item))
-            print("="*10)
             item = json.loads(item)
             for k, v in item.items():
                 if k == "name_value":
