@@ -77,7 +77,9 @@ def wappFormat(domain,wappObj):
         a = dict()
         scripts = dict()
         new_data = dict()
-        wappjson = json.loads(each['stack'][0])
+        wappjson = json.loads(each['stack'])
+        print(wappjson)
+        wappjson = wappjson[0]
 
 
         try:
