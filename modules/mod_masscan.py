@@ -13,7 +13,7 @@ def execMasscan(domain,ports):
     if os.path.isfile(domain + ".masscan") == False or os.path.getsize(domain + ".masscan") == 0:
         p = subprocess.Popen(
             ['/usr/bin/masscan', '-p', str(ports), '--randomize-hosts', '-Pn', '-iL', domain + ".ips", '--output-format=list',
-             '--output-file=' + domain + ".masscan", '--rate', "10000"],
+             '--output-file=' + domain + ".masscan", '--rate', "800"],
             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         out, err = p.communicate()
     else:
