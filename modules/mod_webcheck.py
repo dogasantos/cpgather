@@ -77,11 +77,8 @@ def wappFormat(domain,wappObj):
         a = dict()
         scripts = dict()
         new_data = dict()
-        wappjson = json.loads(each['stack'])
+        wappjson = json.loads(each['stack'])[0]
         
-        wappjson = wappjson[0]
-
-
         try:
             if each['a']:
                 havelinks = True
@@ -261,8 +258,11 @@ def getUrl(url,timeout):
             ret['a'] = ahr
 
     ret['headers'] = r.headers
-    ret['stack'] = execWappalyzer(url)
-    print(ret['stack'])
+    wappoutput = execWappalyzer(url)
+    if 'TimeoutError:' in wappoutput:
+        wappoutput = "{}"
+    wappoutput = str(wappoutput, 'utf-8' , errors='strict')
+    ret['stack'] = wappoutput 
     ret['content'] = b64encode(zlib.compress(r.content))
     return ret
 
