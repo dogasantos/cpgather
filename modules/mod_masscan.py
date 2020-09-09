@@ -19,13 +19,13 @@ def execMasscan(domain,ports):
     else:
         out = ""
         err = ""
-        print "  + masscan report found, Skipping..."
+        print("  + masscan report found, Skipping...")
 
     return out,err
 
 
 def parseMasscan(masscanreport, verbose):
-    print "[*] Parsing masscan report file"
+    print("[*] Parsing masscan report file")
     m = open(masscanreport, "r")
     masscan_report_content = m.readlines()
     iplist = list()
@@ -41,7 +41,7 @@ def parseMasscan(masscanreport, verbose):
     ipdict = dict((el, 0) for el in iplist)
 
     if verbose:
-        print "  + Filtering entries"
+        print("  + Filtering entries")
 
     for unique_ip in iplist:
         pl = list()
