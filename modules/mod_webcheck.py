@@ -78,7 +78,7 @@ def wappFormat(domain,wappObj):
         scripts = dict()
         new_data = dict()
         wappjson = json.loads(each['stack'])
-        print(wappjson)
+        
         wappjson = wappjson[0]
 
 
@@ -262,6 +262,7 @@ def getUrl(url,timeout):
 
     ret['headers'] = r.headers
     ret['stack'] = execWappalyzer(url)
+    print(ret['stack'])
     ret['content'] = b64encode(zlib.compress(r.content))
     return ret
 
