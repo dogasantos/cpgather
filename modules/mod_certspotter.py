@@ -34,7 +34,7 @@ def Certspotter(domain):
         for line in everyline:
             if "dns_names" in line:
                 nospaces = line.replace(" ","")
-                print nospaces
+                print(nospaces)
 
 
 

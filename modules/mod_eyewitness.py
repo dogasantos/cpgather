@@ -25,7 +25,7 @@ def execEyeWitness(domain):
             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         out, err = p.communicate()
     else:
-        print "    + Skiping EyeWitness (you already have a report file for this domain)"
+        print("    + Skiping EyeWitness (you already have a report file for this domain)")
 
     return out,err
 

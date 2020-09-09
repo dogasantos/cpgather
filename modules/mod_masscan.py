@@ -57,7 +57,7 @@ def parseMasscan(masscanreport, verbose):
         ipdict[unique_ip] = list(pl)
 
     if verbose:
-        print "  + Creating new report"
+        print("  + Creating new report")
 
     f = open(masscanreport + ".new", "w")
     for ip, ports in ipdict.iteritems():
@@ -66,6 +66,6 @@ def parseMasscan(masscanreport, verbose):
 
     f.close()
     if verbose:
-        print "  + Done"
+        print("  + Done")
 
     return ipdict
