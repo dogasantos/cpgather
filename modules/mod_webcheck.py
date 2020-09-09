@@ -143,8 +143,11 @@ def wappFormat(domain,wappObj):
                     new_data['js'] = scripts
 
 
-
+                
                 wappalyzer_result = wappjson.get('applications')
+                if len(wappalyzer_result) == 0:
+                    wappalyzer_result = wappjson.get('technologies')
+                    
                 if len(wappalyzer_result) > 0:
                     wapp = list()
 
@@ -262,7 +265,7 @@ def getUrl(url,timeout):
     if 'TimeoutError:' in wappoutput:
         wappoutput = "{}"
     wappoutput = str(wappoutput, 'utf-8' , errors='strict')
-    ret['stack'] = wappoutput 
+    ret['stack'] = wappoutput
     ret['content'] = b64encode(zlib.compress(r.content))
     return ret
 
