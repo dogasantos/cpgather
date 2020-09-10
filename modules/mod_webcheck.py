@@ -110,51 +110,23 @@ def wappFormat(domain,wappObj):
                 if item not in js:
                     js.append(item)
                 scripts["js"] = js
-        print(type(wappjson))
-        # wappjson = {'Bootstrap', 'PHP', 'jQuery\\;confidence:50', 'Google Font API', 'Cloudflare', 'MySQL', 'WordPress'}
-        for k, v in wappjson['urls'].items():
-            k = k.rstrip('/')
-            if k == each['url']:
-                new_data['status'] = each['status']
-                new_data['url'] = each['url']
-                iplist=getAllipsFor(domain,k)
-                new_data['ips'] = iplist 
-                new_data['headers'] = dict(each['headers'])
-
-                if len(a) > 0:
-                    new_data['ahref'] = a['href']
-                else:
-                    new_data['ahref'] = a
-
-                if len(scripts) > 0:
-                    new_data['js'] = scripts['js']
-                else:
-                    new_data['js'] = scripts
-
-                
-                
-                wappalyzer_result = wappjson.get('applications')
-                if len(wappalyzer_result) == 0:
-                    wappalyzer_result = wappjson.get('technologies')
-                    
-                if len(wappalyzer_result) > 0:
-                    wapp = list()
-
-                    for item in wappalyzer_result:
-                        witem = dict()
-                        witem['name'] = str(item['name'])
-                        witem['version'] = str(item['version'])
-                        witem['confidence'] = str(item['confidence'])
-                        wapp.append(witem)
-
-                    new_data['applications'] = wapp
-                else:
-                    new_data['applications'] = list(dict())
-               
-                
-                new_data['content'] = each['content']
-
-                final_content.append(dict(new_data))
+        # wappjson (set) = {'Bootstrap', 'PHP', 'jQuery\\;confidence:50', 'Google Font API', 'Cloudflare', 'MySQL', 'WordPress'}
+        new_data['status'] = each['status']
+        new_data['url'] = each['url']
+        iplist=getAllipsFor(domain,k)
+        new_data['ips'] = iplist 
+        new_data['headers'] = dict(each['headers'])
+         if len(a) > 0:
+            new_data['ahref'] = a['href']
+        else:
+            new_data['ahref'] = a
+        if len(scripts) > 0:
+            new_data['js'] = scripts['js']
+        else:
+            new_data['js'] = scripts
+        new_data['applications'] = each['stack']
+        new_data['content'] = each['content']
+        final_content.append(dict(new_data))
 
     return final_content
 
