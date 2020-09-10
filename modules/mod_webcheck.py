@@ -129,7 +129,7 @@ def wappFormat(domain,wappObj):
             webapp.append(w_app)
 
         new_data['applications'] =  webapp
-        new_data['content'] = each['content']
+        new_data['content'] = str(each['content'], 'utf-8' , errors='strict')
         final_content.append(dict(new_data))
 
     return final_content
