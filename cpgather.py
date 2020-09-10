@@ -130,7 +130,7 @@ def WebDiscovery(nmapObj, domain, verbose):
         list_of_webstack = RetrieveWebContent(webhosts)
         list_of_webstack = wappFormat(domain,list_of_webstack)
         for item in list_of_webstack:
-            print(list_of_webstack)
+            print(item)
             print("="*100)
     else:
         list_of_webstack = readFile(domain + ".wapp")
