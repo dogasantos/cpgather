@@ -261,7 +261,7 @@ def getUrl(url,timeout):
             ret['a'] = ahr
 
     ret['headers'] = r.headers
-    wappoutput = execWappalyzer(url)
+    wappoutput = execWappalyzer(r)
     if 'TimeoutError:' in wappoutput:
         wappoutput = "{}"
     wappoutput = str(wappoutput, 'utf-8' , errors='strict')
