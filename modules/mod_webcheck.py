@@ -68,6 +68,7 @@ def wappFormat(domain,wappObj):
         scripts = dict()
         new_data = dict()
         wappjson = each['stack']
+        webapp=list()
         
         try:
             if each['a']:
@@ -124,7 +125,10 @@ def wappFormat(domain,wappObj):
             new_data['js'] = scripts['js']
         else:
             new_data['js'] = scripts
-        new_data['applications'] = each['stack']
+        for w_app in each['stack']:
+            webapp.append(w_app)
+
+        new_data['applications'] =  webapp
         new_data['content'] = each['content']
         final_content.append(dict(new_data))
 
