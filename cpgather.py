@@ -212,6 +212,10 @@ def S3Discovery(domain,verbose):
 
 
 if __name__ == "__main__":
+    if os.geteuid() != 0:
+        printf("[x] Must be root to run custom portscan.")
+        sys.exit(1)
+        
     args = parse_args()
     user_domain = args.domain
     user_verbose = args.verbose
@@ -235,7 +239,9 @@ if __name__ == "__main__":
         print("[*] Port Scanning phase started")
         if os.path.isfile(user_domain + ".nmap.xml") == False or os.path.getsize(user_domain + ".nmap.xml") == 0:
             print("  + Running masscan against %s targets" % str(len(ips)))
-            execMasscan(user_domain, ports)
+            out,err=execMasscan(user_domain, ports)
+            if "You don't have permission" in err:
+                sys.exit("[x] You don't have permission to run portscan. You must run as root.")
             oports = readFile(user_domain + ".masscan")
             if len(oports) > 0:
                 print("  + Running nmap fingerprinting and scripts")
