@@ -110,9 +110,8 @@ def wappFormat(domain,wappObj):
                 if item not in js:
                     js.append(item)
                 scripts["js"] = js
-
-
-
+        print(type(wappjson))
+        # wappjson = {'Bootstrap', 'PHP', 'jQuery\\;confidence:50', 'Google Font API', 'Cloudflare', 'MySQL', 'WordPress'}
         for k, v in wappjson['urls'].items():
             k = k.rstrip('/')
             if k == each['url']:
