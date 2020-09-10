@@ -129,6 +129,18 @@ def WebDiscovery(nmapObj, domain, verbose):
     if os.path.isfile(domain+".wapp") == False or os.path.getsize(domain+".wapp") == 0:
         list_of_webstack = RetrieveWebContent(webhosts)
         list_of_webstack = wappFormat(domain,list_of_webstack)
+        for item in list_of_webstack:
+            print(list_of_webstack)
+            print("="*100)
+    else:
+        list_of_webstack = readFile(domain + ".wapp")
+
+
+
+    '''
+    if os.path.isfile(domain+".wapp") == False or os.path.getsize(domain+".wapp") == 0:
+        list_of_webstack = RetrieveWebContent(webhosts)
+        list_of_webstack = wappFormat(domain,list_of_webstack)
         totalsize=len(list_of_webstack)
         itemcount=1
         appendFile(domain + ".wapp", '{"data":[')
@@ -144,7 +156,7 @@ def WebDiscovery(nmapObj, domain, verbose):
         appendFile(domain + ".wapp", ']}')
     else:
         list_of_webstack = readFile(domain + ".wapp")
-
+    '''
 
     print("[*] Javascript files identification")
     if os.path.isfile(domain+".js.allfiles") == False or os.path.getsize(domain+".js.allfiles") == 0:
