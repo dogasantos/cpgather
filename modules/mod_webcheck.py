@@ -70,6 +70,14 @@ def wappFormat(domain,wappObj):
     )
 
     '''
+    print(wappObj)
+
+    return final_content
+
+
+'''
+def wappFormat(domain,wappObj):
+    
     final_content = list()
     for each in wappObj:
         js = list()
@@ -77,7 +85,7 @@ def wappFormat(domain,wappObj):
         a = dict()
         scripts = dict()
         new_data = dict()
-        wappjson = json.loads(each['stack'])[0]
+        wappjson = json.loads(each['stack'])
         
         try:
             if each['a']:
@@ -142,7 +150,7 @@ def wappFormat(domain,wappObj):
                 else:
                     new_data['js'] = scripts
 
-
+                
                 
                 wappalyzer_result = wappjson.get('applications')
                 if len(wappalyzer_result) == 0:
@@ -161,14 +169,15 @@ def wappFormat(domain,wappObj):
                     new_data['applications'] = wapp
                 else:
                     new_data['applications'] = list(dict())
-
+               
+                
                 new_data['content'] = each['content']
 
                 final_content.append(dict(new_data))
 
     return final_content
 
-'''
+
 
 '''
 def normalize_jsfiles(origin_url,js_list):
