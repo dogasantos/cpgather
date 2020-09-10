@@ -60,20 +60,10 @@ def FindWeb(domain, nmapObj):
     return weblist
 
 def wappFormat(domain,wappObj):
-    '''
-    list(
-        url: string
-        headers: string
-        js: list
-        ahref: list
-        applications: dict
-    )
+ 
+    print(wappObj[0].keys())
 
-    '''
-    for item in wappObj:
-        print(item)
-
-    return final_content
+    return 1
 
 
 '''
