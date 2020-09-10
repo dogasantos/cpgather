@@ -116,7 +116,7 @@ def wappFormat(domain,wappObj):
         iplist=getAllipsFor(domain,k)
         new_data['ips'] = iplist 
         new_data['headers'] = dict(each['headers'])
-         if len(a) > 0:
+        if len(a) > 0:
             new_data['ahref'] = a['href']
         else:
             new_data['ahref'] = a
