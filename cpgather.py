@@ -133,7 +133,6 @@ def WebDiscovery(nmapObj, domain, verbose):
         itemcount=1
         appendFile(domain + ".wapp", '{"data":[')
         for item in list_of_webstack:
-            print(item)
             njson = json.dumps(item)
             appendFile(domain + ".wapp", njson)
             if itemcount < totalsize:
