@@ -113,7 +113,7 @@ def wappFormat(domain,wappObj):
         # wappjson (set) = {'Bootstrap', 'PHP', 'jQuery\\;confidence:50', 'Google Font API', 'Cloudflare', 'MySQL', 'WordPress'}
         new_data['status'] = each['status']
         new_data['url'] = each['url']
-        iplist=getAllipsFor(domain,k)
+        iplist=getAllipsFor(domain,each['url'])
         new_data['ips'] = iplist 
         new_data['headers'] = dict(each['headers'])
         if len(a) > 0:
