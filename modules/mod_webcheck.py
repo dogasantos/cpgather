@@ -59,11 +59,6 @@ def FindWeb(domain, nmapObj):
     weblist = sort_uniq(weblist)
     return weblist
 
-def wappFormat(domain,wappObj):
- 
-    print(wappObj[0].keys())
-
-    return 1
 
 
 '''
