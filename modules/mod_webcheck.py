@@ -59,7 +59,105 @@ def FindWeb(domain, nmapObj):
     weblist = sort_uniq(weblist)
     return weblist
 
+def wappFormat(domain,wappObj):
+    final_content = list()
+    for each in wappObj:
+        js = list()
+        ahref = list()
+        a = dict()
+        scripts = dict()
+        new_data = dict()
+        wappjson = each['stack']
+        
+        try:
+            if each['a']:
+                havelinks = True
+        except:
+            havelinks = False
 
+        try:
+            if each['js']:
+                havejs = True
+        except:
+            havejs = False
+
+        if havelinks:
+            for item in each['a']:
+                item = item.replace(" ", '')
+                item = item.replace("\n", '')
+                if '%' in item:
+                    item = unquote(item.encode('utf-8', 'ignore'))
+                if "javascript:void(0)" in item:
+                    continue
+                if "#" == item:
+                    continue
+                if "//" in item:
+                    ahref.append(item)
+                a['href'] = ahref
+
+        if havejs:
+            for item in each['js']:
+
+                item = item.replace(" ", '')
+                item = item.rstrip()
+                if '%' in item:
+                    item = unquote(str(item))
+                    
+                if "javascript:" in item:
+                    continue
+                if "#" == item:
+                    continue
+                if item not in js:
+                    js.append(item)
+                scripts["js"] = js
+
+
+
+        for k, v in wappjson['urls'].items():
+            k = k.rstrip('/')
+            if k == each['url']:
+                new_data['status'] = each['status']
+                new_data['url'] = each['url']
+                iplist=getAllipsFor(domain,k)
+                new_data['ips'] = iplist 
+                new_data['headers'] = dict(each['headers'])
+
+                if len(a) > 0:
+                    new_data['ahref'] = a['href']
+                else:
+                    new_data['ahref'] = a
+
+                if len(scripts) > 0:
+                    new_data['js'] = scripts['js']
+                else:
+                    new_data['js'] = scripts
+
+                
+                
+                wappalyzer_result = wappjson.get('applications')
+                if len(wappalyzer_result) == 0:
+                    wappalyzer_result = wappjson.get('technologies')
+                    
+                if len(wappalyzer_result) > 0:
+                    wapp = list()
+
+                    for item in wappalyzer_result:
+                        witem = dict()
+                        witem['name'] = str(item['name'])
+                        witem['version'] = str(item['version'])
+                        witem['confidence'] = str(item['confidence'])
+                        wapp.append(witem)
+
+                    new_data['applications'] = wapp
+                else:
+                    new_data['applications'] = list(dict())
+               
+                
+                new_data['content'] = each['content']
+
+                final_content.append(dict(new_data))
+
+    return final_content
 
 '''
 def wappFormat(domain,wappObj):
