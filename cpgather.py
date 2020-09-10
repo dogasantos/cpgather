@@ -131,7 +131,8 @@ def WebDiscovery(nmapObj, domain, verbose):
         list_of_webstack = wappFormat(domain,list_of_webstack)
         #appendFile(domain + ".wapp", '{"data":[')
         for item in list_of_webstack:
-            print(json.dumps(item))
+            print(item)
+            print("="*100)
         
             
     else:
