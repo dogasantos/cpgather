@@ -261,11 +261,8 @@ def getUrl(url,timeout):
             ret['a'] = ahr
 
     ret['headers'] = r.headers
-    wappoutput = execWappalyzer(r)
-    if 'TimeoutError:' in wappoutput:
-        wappoutput = "{}"
-    wappoutput = str(wappoutput, 'utf-8' , errors='strict')
-    ret['stack'] = wappoutput
+    ret['stack'] = execWappalyzer(r)
+    print(ret['stack'])
     ret['content'] = b64encode(zlib.compress(r.content))
     return ret
 
