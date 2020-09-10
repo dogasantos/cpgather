@@ -19,9 +19,6 @@ def execMton(domain):
         out = ""
         err = ""
         print("  + Nmap report found, Skipping...")
-
-    print(err)
-
     return out,err
 
 
