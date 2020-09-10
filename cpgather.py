@@ -129,6 +129,8 @@ def WebDiscovery(nmapObj, domain, verbose):
     if os.path.isfile(domain+".wapp") == False or os.path.getsize(domain+".wapp") == 0:
         list_of_webstack = RetrieveWebContent(webhosts)
         list_of_webstack = wappFormat(domain,list_of_webstack)
+        #debug
+        print(list_of_webstack)
         totalsize=len(list_of_webstack)
         itemcount=1
         appendFile(domain + ".wapp", '{"data":[')

@@ -326,8 +326,6 @@ def getUrl(url,timeout):
 
     ret['headers'] = r.headers
     ret['stack'] = execWappalyzer(r)
-    print(url)
-    print(ret['stack'])
     ret['content'] = b64encode(zlib.compress(r.content))
     return ret
 
