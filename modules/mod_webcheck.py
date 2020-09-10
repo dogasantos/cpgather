@@ -70,7 +70,8 @@ def wappFormat(domain,wappObj):
     )
 
     '''
-    print(wappObj)
+    for item in wappObj:
+        print(item)
 
     return final_content
 
