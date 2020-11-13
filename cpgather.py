@@ -22,8 +22,6 @@ from modules.misc import saveFile, readFile, appendFile, filterTargetDomainList
 from modules.mod_s3scanner import execS3Scanner
 from modules.mod_waybackmachine import WayBackMachine
 from modules.mod_crtsh import crtshQuery
-
-from modules.mod_forwarddns import parseForwardDnsFile
 from modules.mod_webcheck import FindWeb, RetrieveWebContent, wappFormat, normalize_jsfiles, GetJsCommonDirectoriesURI, getUrlPath, ExtractJsLinks
 
 SUBWL="/usr/share/wordlists/commonspeak2-wordlists/subdomains/subdomains.txt"
@@ -36,7 +34,7 @@ CPPATH=os.path.dirname(os.path.realpath(__file__))
 def banner():
     print("cpgather "+str(__version__)+" @ dogasantos")
     print("------------------------------------------------")
-    print(" subdomains, portscan, webstack, ")
+    print("     A wrapper arround a few recon tools ")
     print("------------------------------------------------")
 
 def parser_error(errmsg):
@@ -50,53 +48,53 @@ def parse_args():
     parser.error = parser_error
     parser._optionals.title = "Options:"
     parser.add_argument('-d', '--domain', help="Domain name we should work with", required=True)
+    parser.add_argument('-l', '--sublist', help="List of already known hosts that should be parsed", required=False)
+    parser.add_argument('-s', '--skipdiscover', help="Just parse the list provided via -i. Do not run otehr discovery tools", required=False)
     parser.add_argument('-ps', '--ports', help='Specify comma separated list of ports that should be scanned (all tcp by default)', required=False, nargs='?')
     parser.add_argument('-v', '--verbose', help='Enable Verbosity',  required=False, action='store_true')
     parser.add_argument('-sw', '--wordlist', help='Specify a wordlist for subdomain discovery (otherwise default one)', required=False, nargs='?')
     return parser.parse_args()
 
 
-def TargetDiscovery(domain,wordlist):
+def TargetDiscovery(domain,wordlist,skipdiscovery,hostlist):
     print("[*] Subdomain discovery phase")
     ips = list()
     hosts = list()
+    if skipdiscovery == False:
+        print("  + Running amass")
+        execAmass(domain)
 
-    print("  + Running amass")
-    execAmass(domain)
+        print("  + Running sublist3r")
+        execSublist3r(domain)
+    
+        print("  + Running WayBack machine query")
+        wayback_found_list = WayBackMachine(domain)
+    
+        print("  + Running subfinder (bruteforce mode)")
+        execSubfinder(domain,wordlist)
 
-    print("  + Running sublist3r")
-    execSublist3r(domain)
+        print("  + Parsing subfinder report")
+        subfinder_found_list = parseSubfinder(domain)
+        for item in subfinder_found_list:
+            hosts.append(item.rstrip("\n"))
 
-    print("  + Running WayBack machine query")
-    wayback_found_list = WayBackMachine(domain)
+        print("  + Parsing WayBack machine report")
+        for item in wayback_found_list:
+            hosts.append(item.rstrip("\n"))
 
-    print("  + Running subfinder (bruteforce mode)")
-    execSubfinder(domain,wordlist)
+        print("  + Parsing amass report")
+        amass_found_list = parseAmass(domain)
+        for item in amass_found_list:
+            hosts.append(item.rstrip("\n"))
 
-    print("  + Parsing subfinder report")
-    subfinder_found_list = parseSubfinder(domain)
-    for item in subfinder_found_list:
-        hosts.append(item.rstrip("\n"))
+        print("  + Parsing sublist3r report")
+        sublist3r_found_list = parseSublist3r(domain)
+        for item in sublist3r_found_list:
+            hosts.append(item.rstrip("\n"))
 
-    print("  + Parsing WayBack machine report")
-    for item in wayback_found_list:
-        hosts.append(item.rstrip("\n"))
+    else:
+        hosts = readFile(hostlist)
 
-    print("  + Parsing amass report")
-    amass_found_list = parseAmass(domain)
-    for item in amass_found_list:
-        hosts.append(item.rstrip("\n"))
-
-    print("  + Parsing sublist3r report")
-    sublist3r_found_list = parseSublist3r(domain)
-    for item in sublist3r_found_list:
-        hosts.append(item.rstrip("\n"))
-
-    if os.path.isfile(domain + ".forwarddns") == True and os.path.getsize(domain + ".forwarddns") > 1:
-        print("  + Parsing Forward Dns (project sonar) json file")
-        fdns_host_list,fdns_cname_list = parseForwardDnsFile(domain)
-        for h in fdns_host_list:
-            hosts.append(h.rstrip("\n"))
     #just to make sure...
     uhosts = filterTargetDomainList(list(set(hosts)),domain)
 
@@ -220,15 +218,23 @@ if __name__ == "__main__":
     user_verbose = args.verbose
     user_subdomain_wordlist = args.wordlist
     user_ports = args.ports
+    user_sublist = args.sublist 
+    user_skipdiscover = args.skipdiscover 
+
+
+
     banner()
 
     if user_ports is not None:
         ports = user_ports
     else:
-        ports="80,443,8080,8443"
+        ports="80,443,8080,8443,9000,9090,8081,9443"
     nmapObj = False
     
-    ips,hosts = TargetDiscovery(user_domain,user_subdomain_wordlist)
+
+
+    ips,hosts = TargetDiscovery(user_domain,user_subdomain_wordlist,user_skipdiscover,user_sublist)
+
     if len(ips) == 0:
         user_noscan = True
     else: 
@@ -254,7 +260,6 @@ if __name__ == "__main__":
 
     if nmapObj:
         list_of_webservers_found, list_of_webstack = WebDiscovery(nmapObj, user_domain, user_verbose)
-
 
     else:
         print("[*] Web discovery skipped (no open ports found)")
